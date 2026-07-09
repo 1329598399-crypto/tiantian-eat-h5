@@ -1,0 +1,1525 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>甜甜今天吃什么</title>
+  <style>
+    :root {
+      --bg: #fff5f7;
+      --paper: #fffafd;
+      --ink: #3f2730;
+      --muted: #8b6b76;
+      --line: #f1d7df;
+      --green: #cc6f91;
+      --green-dark: #9e4868;
+      --tomato: #e97599;
+      --yellow: #ffd36f;
+      --blue: #9e78c9;
+      --lavender: #eee4ff;
+      --shadow: 0 18px 60px rgba(137, 72, 98, .16);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 12% 7%, rgba(255, 191, 212, .5), transparent 18rem),
+        radial-gradient(circle at 88% 4%, rgba(238, 228, 255, .72), transparent 16rem),
+        linear-gradient(160deg, #fff6f8 0%, #fffafd 48%, #fff1df 100%);
+    }
+
+    button, input, select, textarea {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+    }
+
+    button:active { transform: translateY(1px) scale(.99); }
+
+    .app {
+      width: min(860px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    .hero {
+      position: relative;
+      padding: 18px 4px 12px;
+    }
+
+    .hero::after {
+      content: "Tiantian only";
+      position: absolute;
+      right: 4px;
+      top: 16px;
+      padding: 6px 10px;
+      border: 1px solid rgba(233, 117, 153, .28);
+      border-radius: 999px;
+      color: var(--green-dark);
+      background: rgba(255, 250, 253, .66);
+      font-size: .76rem;
+      font-weight: 800;
+    }
+
+    .hero-copy h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2.1rem, 11vw, 3.9rem);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .hero-copy p {
+      max-width: 520px;
+      margin: 0;
+      color: var(--muted);
+      font-size: .98rem;
+      line-height: 1.65;
+    }
+
+    .table-scene {
+      display: none;
+    }
+
+    .panel {
+      background: rgba(255, 250, 253, .9);
+      border: 1px solid rgba(241, 215, 223, .92);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .picker {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .controls,
+    .result,
+    .manager {
+      border-radius: 20px;
+      padding: 16px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: 1.08rem;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 5px 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255,255,255,.72);
+      font-size: .85rem;
+      white-space: nowrap;
+    }
+
+    .segmented {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      padding: 6px;
+      margin-bottom: 14px;
+      border-radius: 14px;
+      background: #f7e8ef;
+    }
+
+    .segmented button {
+      min-height: 44px;
+      border-radius: 10px;
+      color: var(--muted);
+      background: transparent;
+    }
+
+    .segmented button.active {
+      color: #fff;
+      background: linear-gradient(135deg, #e97599, #b979d6);
+      box-shadow: 0 10px 22px rgba(204, 111, 145, .24);
+    }
+
+    .field {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0;
+    }
+
+    .field label {
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      width: 100%;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 10px 12px;
+      color: var(--ink);
+      background: rgba(255,255,255,.88);
+      outline: none;
+    }
+
+    .native-select {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .choice-btn {
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .74);
+      font-weight: 700;
+    }
+
+    .choice-btn.active {
+      color: #fff;
+      border-color: transparent;
+      background: linear-gradient(135deg, #e97599, #b979d6);
+      box-shadow: 0 10px 20px rgba(204, 111, 145, .18);
+    }
+
+    .field textarea {
+      min-height: 72px;
+      resize: vertical;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .primary,
+    .secondary,
+    .ghost,
+    .danger {
+      min-height: 48px;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-weight: 700;
+    }
+
+    .primary {
+      color: #fff;
+      background: linear-gradient(135deg, #e97599, #ff9f8a);
+      box-shadow: 0 12px 28px rgba(233, 117, 153, .28);
+    }
+
+    .secondary {
+      color: #fff;
+      background: linear-gradient(135deg, #b979d6, #e97599);
+    }
+
+    .ghost {
+      color: var(--green-dark);
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.66);
+    }
+
+    .danger {
+      color: #9d3424;
+      border: 1px solid #f0c6bd;
+      background: #fff2ef;
+    }
+
+    .result {
+      order: -1;
+      position: relative;
+      display: grid;
+      align-content: start;
+      min-height: 300px;
+      overflow: hidden;
+    }
+
+    .result.shaking {
+      animation: cardShake .42s ease both;
+    }
+
+    @keyframes cardShake {
+      0%, 100% { transform: translateX(0) rotate(0); }
+      18% { transform: translateX(-5px) rotate(-1deg); }
+      36% { transform: translateX(5px) rotate(1deg); }
+      54% { transform: translateX(-4px) rotate(-.8deg); }
+      72% { transform: translateX(4px) rotate(.8deg); }
+    }
+
+    .result::before {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -100px;
+      width: 230px;
+      height: 230px;
+      border-radius: 50%;
+      background: rgba(255, 191, 212, .46);
+    }
+
+    .result::after {
+      content: "甜";
+      position: absolute;
+      right: 24px;
+      bottom: 20px;
+      color: rgba(233, 117, 153, .12);
+      font-size: 6.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .result-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .meal-tag {
+      display: inline-flex;
+      margin-bottom: 12px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      color: #9e4868;
+      background: #ffe6ef;
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .answer {
+      margin: 4px 0 10px;
+      font-size: clamp(2.35rem, 13vw, 4.4rem);
+      line-height: 1.06;
+      letter-spacing: 0;
+    }
+
+    .desc {
+      margin: 0 0 16px;
+      color: var(--muted);
+      line-height: 1.65;
+      font-size: .96rem;
+    }
+
+    .dish-choice {
+      margin: 12px 0 4px;
+      padding: 12px;
+      border: 1px solid #f0d8b8;
+      border-radius: 14px;
+      color: #7b3d54;
+      background: linear-gradient(135deg, #fff0f5, #fff7df);
+      font-weight: 800;
+      line-height: 1.5;
+    }
+
+    .shake-hint {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.5;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    .map-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 10px 14px;
+      border-radius: 12px;
+      color: #fff;
+      background: var(--blue);
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .history {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .history h3 {
+      margin: 0 0 8px;
+      font-size: .95rem;
+      color: var(--muted);
+    }
+
+    .history-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .manager {
+      margin-top: 14px;
+    }
+
+    .mobile-drawer-title {
+      display: none;
+    }
+
+    details summary {
+      cursor: pointer;
+      list-style: none;
+      font-weight: 800;
+      min-height: 34px;
+    }
+
+    details summary::-webkit-details-marker { display: none; }
+
+    .advanced {
+      margin-top: 10px;
+      padding-top: 6px;
+    }
+
+    .advanced summary {
+      color: var(--muted);
+      font-size: .9rem;
+      font-weight: 700;
+    }
+
+    .store-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 14px;
+      max-height: 280px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .store-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255,255,255,.64);
+    }
+
+    .store-item strong {
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .store-item span {
+      display: block;
+      color: var(--muted);
+      font-size: .88rem;
+      line-height: 1.55;
+    }
+
+    .tiny-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    .icon-button {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      color: var(--green-dark);
+      background: #f5efe4;
+      font-weight: 800;
+    }
+
+    .notice {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .85rem;
+      line-height: 1.6;
+    }
+
+    .hidden { display: none; }
+
+    @media (max-width: 560px) {
+      body {
+        background:
+          radial-gradient(circle at 12% 0%, rgba(255, 191, 212, .48), transparent 14rem),
+          radial-gradient(circle at 100% 4%, rgba(238, 228, 255, .56), transparent 12rem),
+          linear-gradient(160deg, #fff6f8 0%, #fffafd 58%, #fff1df 100%);
+      }
+
+      .app { padding: 10px 12px; }
+      .hero { padding: 4px 2px 8px; }
+      .hero-copy h1 {
+        margin-bottom: 4px;
+        font-size: clamp(1.82rem, 9vw, 2.55rem);
+        line-height: 1.06;
+      }
+      .hero-copy p {
+        max-width: 320px;
+        font-size: .86rem;
+        line-height: 1.45;
+      }
+      .hero::after {
+        position: static;
+        display: inline-flex;
+        margin-top: 8px;
+        padding: 4px 8px;
+        font-size: .68rem;
+      }
+      .controls, .result, .manager { padding: 14px; border-radius: 16px; }
+      .picker { gap: 10px; }
+      .result {
+        order: -2;
+        min-height: 0;
+      }
+      .result::before {
+        width: 150px;
+        height: 150px;
+        right: -54px;
+        top: -66px;
+      }
+      .result::after {
+        font-size: 4.4rem;
+        right: 18px;
+        bottom: 14px;
+      }
+      .row { grid-template-columns: 1fr; }
+      .actions > * { flex: 1 1 100%; }
+      .controls {
+        position: sticky;
+        bottom: 8px;
+        z-index: 8;
+        padding-top: 10px;
+      }
+      .controls .section-title {
+        display: none;
+      }
+      .mobile-drawer-title {
+        display: block;
+        margin: 0 0 8px;
+        color: var(--muted);
+        font-size: .82rem;
+        font-weight: 800;
+        text-align: center;
+      }
+      .section-title {
+        align-items: center;
+        flex-direction: row;
+        margin-bottom: 10px;
+      }
+      .field label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+      }
+      .choice-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .choice-btn {
+        min-height: 36px;
+        padding: 7px 8px;
+        font-size: .88rem;
+      }
+      .answer {
+        margin-top: 2px;
+        font-size: clamp(1.62rem, 8.3vw, 2.45rem);
+      }
+      .desc {
+        margin-bottom: 8px;
+        font-size: .88rem;
+        line-height: 1.5;
+      }
+      .meal-tag {
+        margin-bottom: 8px;
+        padding: 5px 9px;
+        font-size: .8rem;
+      }
+      .shake-hint {
+        margin-top: 6px;
+        font-size: .78rem;
+      }
+      .dish-choice {
+        margin-top: 8px;
+        padding: 10px;
+      }
+      .history { display: none; }
+      .manager .actions > * { flex-basis: calc(50% - 5px); }
+      .store-item { grid-template-columns: 1fr; }
+      .tiny-actions { justify-content: flex-end; }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="hero">
+      <div class="hero-copy">
+        <h1>甜甜今天吃什么</h1>
+        <p>甜甜专属小饭签，想认真吃饭，也想被好好投喂。</p>
+      </div>
+      <div class="table-scene" aria-label="温暖的餐桌插画"></div>
+    </section>
+
+    <section class="picker">
+      <aside class="controls panel">
+        <p class="mobile-drawer-title">选一下偏好，再摇出甜甜今天吃什么</p>
+        <div class="section-title">
+          <h2>甜甜想怎么选</h2>
+          <span class="pill" id="clockText">正在看饭点</span>
+        </div>
+
+        <div class="segmented" role="tablist" aria-label="选择模式">
+          <button id="broadMode" class="active" type="button">按想吃的</button>
+          <button id="nearMode" type="button">附近挑一家</button>
+        </div>
+
+        <div class="row">
+          <div class="field">
+            <label for="mealSelect">饭点</label>
+            <select id="mealSelect" class="native-select" tabindex="-1" aria-hidden="true">
+              <option value="auto">按现在自动判断</option>
+              <option value="breakfast">早餐</option>
+              <option value="lunch">午餐</option>
+              <option value="dinner">晚餐</option>
+              <option value="any">随时都行</option>
+            </select>
+            <div class="choice-grid" data-choice-for="mealSelect">
+              <button class="choice-btn active" type="button" data-value="auto">按现在</button>
+              <button class="choice-btn" type="button" data-value="breakfast">早餐</button>
+              <button class="choice-btn" type="button" data-value="lunch">午餐</button>
+              <button class="choice-btn" type="button" data-value="dinner">晚餐</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="moodSelect">今天想要</label>
+            <select id="moodSelect" class="native-select" tabindex="-1" aria-hidden="true">
+              <option value="any">都可以</option>
+              <option value="sweet">想吃甜的</option>
+              <option value="pretty">精致一点</option>
+              <option value="comfort">治愈舒服</option>
+              <option value="warm">热乎舒服</option>
+              <option value="quick">快点吃完</option>
+              <option value="light">清爽一点</option>
+              <option value="spicy">来点重口</option>
+              <option value="local">山西本地味</option>
+            </select>
+            <div class="choice-grid" data-choice-for="moodSelect">
+              <button class="choice-btn active" type="button" data-value="any">都可以</button>
+              <button class="choice-btn" type="button" data-value="sweet">想吃甜的</button>
+              <button class="choice-btn" type="button" data-value="pretty">精致一点</button>
+              <button class="choice-btn" type="button" data-value="comfort">治愈舒服</button>
+              <button class="choice-btn" type="button" data-value="light">清爽一点</button>
+              <button class="choice-btn" type="button" data-value="warm">热乎舒服</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="nearFields" class="hidden">
+          <div class="actions">
+            <button class="ghost" id="locateBtn" type="button">用当前位置</button>
+          </div>
+          <details class="advanced">
+            <summary>手动坐标</summary>
+            <div class="row">
+              <div class="field">
+                <label for="latInput">纬度</label>
+                <input id="latInput" inputmode="decimal" value="37.8706" aria-label="纬度">
+              </div>
+              <div class="field">
+                <label for="lngInput">经度</label>
+                <input id="lngInput" inputmode="decimal" value="112.5489" aria-label="经度">
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="pickBtn" type="button">摇一摇 / 点一下</button>
+          <button class="secondary" id="againBtn" type="button">换个甜甜会爱的</button>
+        </div>
+      </aside>
+
+      <section class="result panel" aria-live="polite">
+        <div class="result-body">
+          <span class="meal-tag" id="mealTag">午餐建议</span>
+          <h2 class="answer" id="answerTitle">等甜甜摇一下</h2>
+          <p class="desc" id="answerDesc">会按饭点、心情和当前位置，挑一个更像甜甜会喜欢的答案。</p>
+          <p class="shake-hint" id="shakeHint">点一次按钮开启后，晃晃手机也能随机。</p>
+          <div class="dish-choice hidden" id="dishChoice"></div>
+          <div class="meta" id="metaTags"></div>
+          <a class="map-link hidden" id="mapLink" target="_blank" rel="noopener">去地图看看</a>
+
+          <div class="history">
+            <h3>刚才给甜甜抽到过</h3>
+            <div class="history-list" id="historyList">
+              <span class="pill">还没有记录</span>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+
+    <section class="manager panel">
+      <details>
+        <summary>维护我的菜单</summary>
+        <div class="row">
+          <div class="field">
+            <label for="typeInput">类型</label>
+            <select id="typeInput">
+              <option value="store">太原餐厅</option>
+              <option value="broad">泛泛品类</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="nameInput">名称</label>
+            <input id="nameInput" placeholder="例如：刀削面 / 并州饭店">
+          </div>
+        </div>
+        <div class="row" id="storeOnlyFields">
+          <div class="field">
+            <label for="districtInput">区域/地址提示</label>
+            <input id="districtInput" placeholder="例如：迎泽区 / 亲贤街附近">
+          </div>
+          <div class="field">
+            <label for="coordInput">坐标</label>
+            <input id="coordInput" placeholder="纬度,经度，可不填">
+          </div>
+        </div>
+        <div class="row">
+          <div class="field">
+            <label for="mealsInput">适合饭点</label>
+            <input id="mealsInput" placeholder="breakfast,lunch,dinner 或 any">
+          </div>
+          <div class="field">
+            <label for="tagsInput">标签</label>
+            <input id="tagsInput" placeholder="local,warm,quick">
+          </div>
+        </div>
+        <div class="field">
+          <label for="noteInput">一句备注</label>
+          <textarea id="noteInput" placeholder="写一点你自己的判断，比如招牌菜、适合场景、避雷提醒"></textarea>
+        </div>
+        <div class="field">
+          <label for="dishesInput">推荐吃什么</label>
+          <textarea id="dishesInput" placeholder="用逗号隔开，例如：牛肉刀削面加卤蛋，番茄鸡蛋面，过油肉拌面"></textarea>
+        </div>
+        <div class="actions">
+          <button class="secondary" id="saveBtn" type="button">保存</button>
+          <button class="ghost" id="exportBtn" type="button">导出</button>
+          <button class="ghost" id="importBtn" type="button">导入</button>
+          <button class="danger" id="resetBtn" type="button">恢复内置</button>
+        </div>
+        <input id="fileInput" class="hidden" type="file" accept="application/json">
+        <p class="notice">维护内容保存在当前浏览器的 localStorage。换浏览器或清缓存前，可以先导出备份。</p>
+        <div class="store-list" id="storeList"></div>
+      </details>
+    </section>
+  </main>
+
+  <script>
+    const TAIYUAN_CENTER = { lat: 37.8706, lng: 112.5489 };
+
+    const seedBroad = [
+      { id: "b1", name: "麻辣烫", meals: ["lunch", "dinner"], tags: ["spicy", "quick", "warm"], note: "热乎、自由、纠结时很好收场。", dishes: ["牛肉丸+宽粉+油麦菜+豆皮", "番茄汤底加肥牛和土豆片", "麻辣拌少汤，多放海带结"] },
+      { id: "b2", name: "刀削面", meals: ["breakfast", "lunch", "dinner"], tags: ["local", "quick", "warm"], note: "山西胃的默认答案，浇头决定今天的情绪。", dishes: ["牛肉刀削面加卤蛋", "番茄鸡蛋刀削面", "过油肉拌刀削面"] },
+      { id: "b3", name: "盖饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "目标明确，适合忙的时候。", dishes: ["鱼香肉丝盖饭", "土豆牛腩盖饭", "番茄鸡蛋盖饭加青菜"] },
+      { id: "b4", name: "砂锅", meals: ["lunch", "dinner"], tags: ["warm"], note: "一锅端上来，身体会先点头。", dishes: ["砂锅米线加肥牛", "砂锅豆腐粉条", "酸菜砂锅白肉"] },
+      { id: "b5", name: "饺子", meals: ["lunch", "dinner"], tags: ["warm", "local"], note: "稳妥、舒服，也适合带点醋意。", dishes: ["羊肉胡萝卜水饺", "猪肉酸菜水饺", "韭菜鸡蛋水饺配一碗汤"] },
+      { id: "b6", name: "粥和包子", meals: ["breakfast"], tags: ["light", "quick", "warm"], note: "早上不想太隆重时，刚刚好。", dishes: ["小米粥+素包+茶叶蛋", "八宝粥+鲜肉包", "豆浆+菜包+卤蛋"] },
+      { id: "b7", name: "黄焖鸡", meals: ["lunch", "dinner"], tags: ["quick", "warm"], note: "下饭能力稳定，选择成本低。", dishes: ["黄焖鸡米饭微辣加土豆", "黄焖排骨米饭", "黄焖鸡加金针菇和青菜"] },
+      { id: "b8", name: "烤肉拌饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "想吃肉但不想坐很久。", dishes: ["黑椒烤肉拌饭", "照烧鸡腿拌饭", "孜然肥牛拌饭加煎蛋"] },
+      { id: "b9", name: "轻食沙拉", meals: ["lunch", "dinner"], tags: ["light"], note: "适合想清爽一点的日子。", dishes: ["鸡胸肉藜麦沙拉", "金枪鱼鸡蛋沙拉", "牛肉蔬菜卷配无糖茶"] },
+      { id: "b10", name: "铜锅涮肉", meals: ["dinner"], tags: ["warm", "local"], note: "晚饭慢慢吃，适合把一天放下来。", dishes: ["手切羊肉+白菜+冻豆腐", "羊上脑+宽粉+芝麻酱", "清汤锅配糖蒜和烧饼"] },
+      { id: "b11", name: "炒菜小馆", meals: ["lunch", "dinner"], tags: ["local"], note: "两三个人最合适，点个过油肉很稳。", dishes: ["过油肉+西红柿炒鸡蛋+米饭", "土豆丝+糖醋丸子+面食", "小炒肉+醋溜白菜"] },
+      { id: "b12", name: "便利店热食", meals: ["breakfast", "lunch", "dinner"], tags: ["quick"], note: "不浪漫，但很会救场。", dishes: ["饭团+关东煮+无糖茶", "便当+茶叶蛋", "三明治+咖啡"] },
+      { id: "b13", name: "臊子面", meals: ["breakfast", "lunch", "dinner"], tags: ["local", "warm", "quick"], note: "酸香开胃，适合没胃口但想吃热饭。", dishes: ["酸汤臊子面", "肉臊子面加豆腐干", "素臊子面配小菜"] },
+      { id: "b14", name: "剔尖/拨鱼", meals: ["breakfast", "lunch"], tags: ["local", "warm"], note: "山西面食里的软乎派，吃起来很顺。", dishes: ["西红柿鸡蛋剔尖", "羊肉臊子剔尖", "炒拨鱼加青椒肉丝"] },
+      { id: "b15", name: "羊杂割", meals: ["breakfast", "lunch", "dinner"], tags: ["local", "warm"], note: "汤热、味足，冷天尤其合适。", dishes: ["羊杂割加粉条", "羊汤配饼", "羊杂汤少辣加香菜"] },
+      { id: "b16", name: "头脑烧麦", meals: ["breakfast"], tags: ["local", "warm"], note: "更太原的早餐答案，适合想吃点仪式感。", dishes: ["头脑+羊肉烧麦", "头脑+帽盒", "烧麦+丸子汤"] },
+      { id: "b17", name: "焖面", meals: ["lunch", "dinner"], tags: ["local", "warm"], note: "豆角、土豆、面一锅熟，扎实顶饱。", dishes: ["豆角焖面", "排骨焖面", "土豆五花肉焖面"] },
+      { id: "b18", name: "米线/米粉", meals: ["lunch", "dinner"], tags: ["spicy", "quick", "warm"], note: "想吸溜点热汤，选它很少失手。", dishes: ["酸辣米线加肥牛", "番茄米线加鱼豆腐", "麻辣米粉加豆皮"] },
+      { id: "b19", name: "馄饨", meals: ["breakfast", "lunch", "dinner"], tags: ["light", "warm", "quick"], note: "轻一点但不冷清，适合胃想休息。", dishes: ["鲜肉小馄饨", "虾仁馄饨", "馄饨加一个葱油饼"] },
+      { id: "b20", name: "冒菜", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "比火锅快，比麻辣烫更像一顿饭。", dishes: ["牛肉冒菜加藕片", "肥肠冒菜加宽粉", "素冒菜加豆腐泡"] },
+      { id: "b21", name: "烤冷面/煎饼", meals: ["breakfast", "dinner"], tags: ["quick"], note: "不太饿的时候，来点街头快乐。", dishes: ["烤冷面加肠加蛋", "煎饼果子加薄脆", "手抓饼加培根和生菜"] },
+      { id: "b22", name: "日式/韩式简餐", meals: ["lunch", "dinner"], tags: ["quick"], note: "想换换口味但别太复杂。", dishes: ["照烧鸡排饭", "石锅拌饭", "咖喱猪排饭"] },
+      { id: "b23", name: "酸菜鱼", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "适合两个人以上，酸辣下饭。", dishes: ["酸菜黑鱼片+米饭", "番茄鱼片锅", "金汤酸菜鱼加宽粉"] },
+      { id: "b24", name: "烧烤夜宵", meals: ["dinner"], tags: ["spicy"], note: "晚一点、想放松一点，就别太端着。", dishes: ["羊肉串+烤馒头片+毛豆", "烤鸡翅+烤韭菜+疙瘩汤", "烤鱼豆腐+板筋+酸梅汤"] },
+      { id: "b25", name: "蒸菜/炖菜", meals: ["lunch", "dinner"], tags: ["light", "warm"], note: "想吃家常、少油一点时很合适。", dishes: ["粉蒸肉配米饭", "排骨玉米汤+青菜", "土豆炖牛肉+馒头"] },
+      { id: "b26", name: "汉堡炸鸡", meals: ["lunch", "dinner"], tags: ["quick"], note: "不用想太多，开心值来得很直接。", dishes: ["辣鸡腿堡套餐", "奥尔良鸡腿饭", "鸡块+薯条+可乐"] },
+      { id: "b27", name: "兰州牛肉面", meals: ["breakfast", "lunch", "dinner"], tags: ["quick", "warm"], note: "清汤热面，快且稳。", dishes: ["二细牛肉面加蛋", "宽面多葱香菜", "牛肉面配小菜"] },
+      { id: "b28", name: "卤肉饭", meals: ["lunch", "dinner"], tags: ["quick", "warm"], note: "小碗也满足，适合一个人吃。", dishes: ["卤肉饭加卤蛋", "鸡腿卤肉双拼饭", "卤肉饭配青菜汤"] },
+      { id: "b29", name: "东北菜", meals: ["lunch", "dinner"], tags: ["warm"], note: "分量踏实，适合多人共享。", dishes: ["锅包肉+地三鲜", "酸菜白肉锅", "小鸡炖蘑菇配米饭"] },
+      { id: "b30", name: "甜品小食", meals: ["any"], tags: ["light", "sweet"], note: "不是正餐，但能把情绪哄好。", dishes: ["双皮奶+红豆", "酸奶碗", "蛋挞+热饮"] },
+      { id: "b31", name: "奶茶和小蛋糕", meals: ["any"], tags: ["sweet", "pretty"], note: "甜甜专属快乐补给，适合想被温柔哄一下。", dishes: ["半糖奶茶+巴斯克蛋糕", "茉莉奶绿+芋泥麻薯", "水果茶+小贝"] },
+      { id: "b32", name: "Brunch早午餐", meals: ["breakfast", "lunch"], tags: ["pretty", "light"], note: "不赶时间的时候，吃得漂亮一点。", dishes: ["牛油果鸡蛋吐司", "可颂三明治+拿铁", "酸奶碗+太阳蛋"] },
+      { id: "b33", name: "寿司/手卷", meals: ["lunch", "dinner"], tags: ["pretty", "light", "quick"], note: "清爽、好看、负担轻，适合想换口味。", dishes: ["三文鱼寿司拼盘", "加州卷+味增汤", "鳗鱼手卷+海草沙拉"] },
+      { id: "b34", name: "韩式拌饭", meals: ["lunch", "dinner"], tags: ["pretty", "comfort"], note: "颜色丰富，拌开就是很满足的一碗。", dishes: ["石锅拌饭加煎蛋", "芝士年糕拉面", "泡菜肥牛拌饭"] },
+      { id: "b35", name: "泰式简餐", meals: ["lunch", "dinner"], tags: ["pretty", "light"], note: "酸甜清爽，适合想吃有香气但不厚重。", dishes: ["冬阴功汤粉", "青柠鸡肉饭", "泰式海鲜沙拉"] },
+      { id: "b36", name: "小火锅", meals: ["lunch", "dinner"], tags: ["warm", "comfort", "pretty"], note: "一个人也能慢慢吃的热乎快乐。", dishes: ["番茄小火锅+肥牛", "菌汤锅+虾滑", "麻辣小锅少辣加宽粉"] },
+      { id: "b37", name: "烘焙面包", meals: ["breakfast", "any"], tags: ["sweet", "quick", "pretty"], note: "轻轻松松，适合早上或下午补一点。", dishes: ["可颂+热拿铁", "碱水面包+酸奶", "肉松小贝+美式"] },
+      { id: "b38", name: "水果酸奶杯", meals: ["breakfast", "any"], tags: ["light", "sweet", "pretty"], note: "清爽漂亮，适合不想吃太撑。", dishes: ["草莓酸奶杯", "芒果西米露", "燕麦酸奶碗"] },
+      { id: "b39", name: "麻薯甜品", meals: ["any"], tags: ["sweet", "pretty"], note: "糯叽叽爱好者专属，开心很具体。", dishes: ["芋泥麻薯盒子", "抹茶红豆麻薯", "雪媚娘+热茶"] },
+      { id: "b40", name: "茶餐厅", meals: ["breakfast", "lunch", "dinner"], tags: ["comfort", "quick"], note: "选择很多，甜口咸口都能照顾到。", dishes: ["番茄牛肉通粉", "菠萝油+鸳鸯", "滑蛋虾仁饭"] },
+      { id: "b41", name: "披萨意面", meals: ["lunch", "dinner"], tags: ["pretty", "comfort"], note: "适合想吃点香香的、奶酪感的东西。", dishes: ["奶油蘑菇意面", "玛格丽特披萨", "番茄肉酱意面+沙拉"] },
+      { id: "b42", name: "越南粉", meals: ["lunch", "dinner"], tags: ["light", "warm"], note: "汤清爽，香草味很治愈。", dishes: ["牛肉河粉", "鲜虾春卷", "鸡肉檬粉"] },
+      { id: "b43", name: "关东煮", meals: ["breakfast", "lunch", "dinner"], tags: ["warm", "quick", "comfort"], note: "小份热乎，适合没那么饿但想被照顾。", dishes: ["萝卜+鱼豆腐+魔芋丝", "关东煮+饭团", "汤豆腐+海带结"] },
+      { id: "b44", name: "鸡汤米线", meals: ["lunch", "dinner"], tags: ["warm", "comfort", "light"], note: "比麻辣轻一点，但还是热热的很安心。", dishes: ["鸡汤米线加菌菇", "番茄鸡汤米线", "藤椒鸡汤米线少辣"] },
+      { id: "b45", name: "粥底火锅", meals: ["dinner"], tags: ["warm", "comfort", "light"], note: "温柔版火锅，适合想暖胃。", dishes: ["粥底锅+虾滑", "粥底肥牛+青菜", "海鲜粥底锅"] },
+      { id: "b46", name: "精致小碗菜", meals: ["lunch", "dinner"], tags: ["pretty", "light"], note: "能多尝几样，又不会一份压倒一切。", dishes: ["小份糖醋里脊+青菜", "蒸蛋+小炒牛肉", "小碗番茄鱼+米饭"] },
+      { id: "b47", name: "下午茶正餐化", meals: ["any"], tags: ["sweet", "pretty"], note: "有时候甜甜想吃的不是饭，是一点好心情。", dishes: ["司康+奶茶", "千层蛋糕+水果茶", "华夫饼+冰淇淋"] },
+      { id: "b48", name: "韩式炸鸡", meals: ["lunch", "dinner"], tags: ["comfort", "sweet"], note: "甜辣口、芝士粉，都很适合快乐一下。", dishes: ["甜辣炸鸡+年糕", "蜂蜜芥末炸鸡", "芝士粉炸鸡+可乐"] },
+      { id: "b49", name: "红烧肉盖饭", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "肥瘦香糯、汤汁拌饭，属于很踏实的快乐。", dishes: ["红烧肉盖饭加卤蛋", "红烧肉盖饭加青菜", "红烧肉双拼豆腐盖饭"] },
+      { id: "b50", name: "猪脚饭", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "胶质感和卤香都很足，适合想吃一顿满足的。", dishes: ["猪脚饭加卤蛋", "猪脚饭加酸菜", "猪脚饭少肥多汁"] },
+      { id: "b51", name: "鸡腿饭", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "不纠结的经典下饭选项，香、稳、快。", dishes: ["照烧鸡腿饭", "卤鸡腿饭加青菜", "香辣鸡腿饭加煎蛋"] },
+      { id: "b52", name: "肥牛饭", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "甜咸酱汁配米饭，适合想快速吃舒服。", dishes: ["洋葱肥牛饭", "温泉蛋肥牛饭", "泡菜肥牛饭"] },
+      { id: "b53", name: "黑椒牛柳饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "黑椒香气明显，肉和米饭组合很直接。", dishes: ["黑椒牛柳饭加煎蛋", "黑椒牛肉粒盖饭", "黑椒鸡排饭"] },
+      { id: "b54", name: "鱼香肉丝盖饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "酸甜咸香都有，没胃口时也容易吃完。", dishes: ["鱼香肉丝盖饭", "鱼香茄子盖饭", "鱼香肉丝加煎蛋"] },
+      { id: "b55", name: "土豆牛腩饭", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "炖菜型盖饭，软糯土豆很加分。", dishes: ["土豆牛腩盖饭", "番茄牛腩饭", "咖喱牛腩饭"] },
+      { id: "b56", name: "番茄鸡蛋盖饭", meals: ["lunch", "dinner"], tags: ["quick", "light"], note: "清爽不腻，想简单吃一点时很合适。", dishes: ["番茄鸡蛋盖饭", "番茄鸡蛋盖饭加火腿", "番茄鸡蛋盖饭加青菜"] },
+      { id: "b57", name: "咖喱鸡排饭", meals: ["lunch", "dinner"], tags: ["comfort", "quick"], note: "香浓咖喱配酥脆鸡排，甜甜也很容易喜欢。", dishes: ["咖喱鸡排饭", "咖喱猪排饭", "咖喱鸡块饭加蛋"] },
+      { id: "b58", name: "卤肉饭", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "小碗浓香，适合一个人轻松吃。", dishes: ["卤肉饭加卤蛋", "鸡腿卤肉双拼饭", "卤肉饭配青菜汤"] },
+      { id: "b59", name: "梅菜扣肉饭", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "咸香下饭，适合想吃肉但不想点菜。", dishes: ["梅菜扣肉饭", "梅菜扣肉饭加青菜", "扣肉饭配紫菜蛋花汤"] },
+      { id: "b60", name: "宫保鸡丁饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "甜辣口更友好，米饭消失得很快。", dishes: ["宫保鸡丁盖饭", "宫保鸡丁加煎蛋", "宫保鸡丁双拼土豆丝"] },
+      { id: "b61", name: "麻婆豆腐饭", meals: ["lunch", "dinner"], tags: ["spicy", "warm", "quick"], note: "热乎又下饭，想吃重口但不想太贵。", dishes: ["麻婆豆腐盖饭", "麻婆豆腐加肉末", "麻婆豆腐饭少辣"] },
+      { id: "b62", name: "酸辣土豆丝盖饭", meals: ["lunch", "dinner"], tags: ["quick", "light"], note: "便宜、爽口、速度快，救急很合格。", dishes: ["酸辣土豆丝盖饭", "土豆丝加鸡蛋", "土豆丝盖饭配小汤"] },
+      { id: "b63", name: "番茄肥牛米线", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "酸甜热汤，适合想吃米线但不想太辣。", dishes: ["番茄肥牛米线", "番茄鱼豆腐米线", "番茄鸡蛋米线"] },
+      { id: "b64", name: "酸辣米线", meals: ["lunch", "dinner"], tags: ["spicy", "quick", "warm"], note: "酸辣开胃，想吸溜点热的就选它。", dishes: ["酸辣米线加肥牛", "酸辣米线加宽粉", "酸辣米线加豆皮"] },
+      { id: "b65", name: "过桥米线", meals: ["lunch", "dinner"], tags: ["warm", "comfort"], note: "汤底温柔，配料丰富，吃起来有仪式感。", dishes: ["原味过桥米线", "番茄过桥米线", "菌菇过桥米线"] },
+      { id: "b66", name: "砂锅米线", meals: ["lunch", "dinner"], tags: ["warm"], note: "热气腾腾，蔬菜豆制品都能照顾到。", dishes: ["砂锅米线加肥牛", "砂锅米线加鱼丸", "砂锅米线加豆腐泡"] },
+      { id: "b67", name: "麻辣米粉", meals: ["lunch", "dinner"], tags: ["spicy", "quick"], note: "比米线更有嚼劲，适合想吃辣一点。", dishes: ["麻辣米粉加豆皮", "麻辣米粉加肥肠", "麻辣米粉少辣加青菜"] },
+      { id: "b68", name: "螺蛳粉", meals: ["lunch", "dinner"], tags: ["spicy", "comfort"], note: "味道强烈但快乐也强烈，适合确定想吃这一口。", dishes: ["原味螺蛳粉加炸蛋", "螺蛳粉加腐竹", "微辣螺蛳粉加青菜"] },
+      { id: "b69", name: "桂林米粉", meals: ["breakfast", "lunch"], tags: ["quick"], note: "干拌或带汤都好吃，早午餐很利索。", dishes: ["卤菜桂林米粉", "牛肉桂林米粉", "酸豆角拌米粉"] },
+      { id: "b70", name: "重庆小面", meals: ["breakfast", "lunch", "dinner"], tags: ["spicy", "quick", "warm"], note: "麻辣香，想吃面但不想山西面时换它。", dishes: ["重庆小面微辣", "豌杂面", "肥肠小面"] },
+      { id: "b71", name: "炸酱面", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "拌开以后很香，简单但不单调。", dishes: ["老北京炸酱面", "鸡蛋炸酱面", "肉丁炸酱面加黄瓜丝"] },
+      { id: "b72", name: "牛肉板面", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "面宽汤香，想吃一碗扎实热面。", dishes: ["牛肉板面加蛋", "板面加豆皮", "微辣板面加青菜"] },
+      { id: "b73", name: "油泼面", meals: ["lunch", "dinner"], tags: ["local", "spicy", "warm"], note: "香、辣、筋道，面食脑袋会满意。", dishes: ["油泼扯面", "油泼面加煎蛋", "油泼面配冰峰/酸梅汤"] },
+      { id: "b74", name: "葱油拌面", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "不辣但香，适合想吃简单碳水。", dishes: ["葱油拌面加煎蛋", "葱油拌面加鸡丝", "葱油拌面配小馄饨"] },
+      { id: "b75", name: "鸡丝凉面", meals: ["lunch", "dinner"], tags: ["light", "quick"], note: "天热或不想吃太烫时很舒服。", dishes: ["麻酱鸡丝凉面", "酸辣鸡丝凉面", "凉面加黄瓜丝"] },
+      { id: "b76", name: "热干面", meals: ["breakfast", "lunch"], tags: ["quick", "comfort"], note: "芝麻酱香，早午餐都很顶。", dishes: ["热干面加蛋", "牛肉热干面", "热干面配豆浆"] },
+      { id: "b77", name: "石锅拌饭", meals: ["lunch", "dinner"], tags: ["pretty", "comfort"], note: "颜色丰富，热热拌开很满足。", dishes: ["石锅拌饭加煎蛋", "肥牛石锅拌饭", "泡菜五花肉石锅饭"] },
+      { id: "b78", name: "照烧鸡排饭", meals: ["lunch", "dinner"], tags: ["quick", "comfort"], note: "甜咸口友好，鸡排和米饭很搭。", dishes: ["照烧鸡排饭", "照烧鸡排饭加温泉蛋", "照烧鸡排双拼沙拉"] },
+      { id: "b79", name: "烤肉拌饭", meals: ["lunch", "dinner"], tags: ["quick"], note: "香气直接，适合想吃肉但不想坐很久。", dishes: ["孜然烤肉拌饭", "黑椒烤肉拌饭", "烤肉拌饭加煎蛋"] },
+      { id: "b80", name: "麻辣香锅单人餐", meals: ["lunch", "dinner"], tags: ["spicy", "comfort"], note: "想吃很多配菜时，一锅解决。", dishes: ["肥牛香锅+藕片+宽粉", "虾滑香锅+土豆+豆皮", "素菜香锅加午餐肉"] },
+      { id: "b81", name: "冒菜单人碗", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "火锅平替，快一点也热闹一点。", dishes: ["牛肉冒菜加宽粉", "番茄冒菜加鱼豆腐", "素冒菜加豆腐泡"] },
+      { id: "b82", name: "酸汤肥牛饭", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "酸辣开胃，汤汁配饭很香。", dishes: ["酸汤肥牛饭", "金汤肥牛饭加粉丝", "酸汤肥牛饭少辣"] },
+      { id: "b83", name: "水煮肉片饭", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "想吃辣和肉的时候，答案很明确。", dishes: ["水煮肉片盖饭", "水煮牛肉饭", "水煮肉片配米饭"] },
+      { id: "b84", name: "酸菜鱼单人饭", meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "比大锅酸菜鱼轻便，酸辣下饭。", dishes: ["酸菜鱼饭", "金汤鱼片饭", "番茄鱼片饭"] },
+      { id: "b85", name: "虾仁滑蛋饭", meals: ["lunch", "dinner"], tags: ["light", "pretty"], note: "嫩嫩的、负担轻，适合不想太重口。", dishes: ["虾仁滑蛋饭", "滑蛋牛肉饭", "滑蛋鸡排饭"] },
+      { id: "b86", name: "三杯鸡饭", meals: ["lunch", "dinner"], tags: ["comfort"], note: "酱香浓但不辣，米饭友好型。", dishes: ["三杯鸡盖饭", "三杯鸡加青菜", "三杯鸡双拼卤蛋"] },
+      { id: "b87", name: "叉烧饭", meals: ["lunch", "dinner"], tags: ["sweet", "comfort"], note: "偏甜口的肉饭，甜甜可能会喜欢。", dishes: ["蜜汁叉烧饭", "叉烧滑蛋饭", "叉烧烧鸭双拼饭"] },
+      { id: "b88", name: "云吞面", meals: ["breakfast", "lunch", "dinner"], tags: ["light", "warm"], note: "汤面轻盈，想吃热乎但不想太撑。", dishes: ["鲜虾云吞面", "叉烧云吞面", "云吞面加青菜"] },
+      { id: "b89", name: "小笼包套餐", meals: ["breakfast", "lunch"], tags: ["quick", "comfort"], note: "小份热乎，早餐午餐都顺手。", dishes: ["小笼包+豆浆", "小笼包+馄饨", "小笼包+酸辣汤"] },
+      { id: "b90", name: "肉夹馍凉皮", meals: ["lunch", "dinner"], tags: ["quick"], note: "碳水和肉都有，适合不想正式吃饭。", dishes: ["腊汁肉夹馍+凉皮", "孜然肉夹馍+冰峰", "凉皮加烤肠"] }
+    ];
+
+    const seedStores = [
+      {
+        id: "s1",
+        name: "清和元",
+        district: "迎泽区，老字号头脑与早餐",
+        lat: 37.8669,
+        lng: 112.5608,
+        meals: ["breakfast", "lunch"],
+        tags: ["local", "warm"],
+        note: "太原传统早餐代表，适合想体验头脑、烧麦这类本地味。",
+        dishes: ["头脑+羊肉烧麦", "头脑+帽盒", "烧麦+丸子汤"]
+      },
+      {
+        id: "s2",
+        name: "认一力",
+        district: "迎泽区，清真老字号",
+        lat: 37.8675,
+        lng: 112.5594,
+        meals: ["lunch", "dinner"],
+        tags: ["local", "warm"],
+        note: "偏传统的太原清真风味，适合牛羊肉、饺子、家常菜方向。",
+        dishes: ["羊肉蒸饺+丸子汤", "牛肉饺子+凉菜", "过油肉+主食"]
+      },
+      {
+        id: "s3",
+        name: "并州饭店",
+        district: "迎泽大街118号附近",
+        lat: 37.8605,
+        lng: 112.5709,
+        meals: ["lunch", "dinner"],
+        tags: ["local"],
+        note: "老牌山西风味饭店，资料中提到并州火锅、过油肉等代表菜。",
+        dishes: ["并州火锅", "过油肉+莜面栲栳栳", "糖醋丸子+山西面食"]
+      },
+      {
+        id: "s4",
+        name: "晋阳饭店",
+        district: "并州北路1号附近",
+        lat: 37.8612,
+        lng: 112.5684,
+        meals: ["lunch", "dinner"],
+        tags: ["local"],
+        note: "1956年建成的太原老饭店，适合想吃正式一点的山西菜。",
+        dishes: ["过油肉", "糖醋丸子", "山西烧鸭配面食"]
+      },
+      {
+        id: "s5",
+        name: "六味斋",
+        district: "柳巷/多门店，酱卤熟食",
+        lat: 37.8699,
+        lng: 112.5687,
+        meals: ["breakfast", "lunch", "dinner"],
+        tags: ["local", "quick"],
+        note: "中华老字号、国家级非遗相关品牌，适合买熟食或凑一顿轻便饭。",
+        dishes: ["酱肘花+饼", "熟食拼盘+小米粥", "香肠豆制品拼一顿轻便饭"]
+      },
+      {
+        id: "s6",
+        name: "老太原菜馆",
+        district: "太原多门店",
+        lat: 37.8444,
+        lng: 112.5563,
+        meals: ["lunch", "dinner"],
+        tags: ["local"],
+        note: "主打太原和山西家常风味，适合朋友聚餐。",
+        dishes: ["过油肉+莜面栲栳栳", "老醋丸子+刀削面", "铜火锅+小凉菜"]
+      },
+      {
+        id: "s7",
+        name: "河东颐祥阁",
+        district: "亲贤/长风商圈可搜",
+        lat: 37.8208,
+        lng: 112.5578,
+        meals: ["lunch", "dinner"],
+        tags: ["local"],
+        note: "偏山西菜、晋南味方向，适合想点硬菜的时候。",
+        dishes: ["晋南小炒肉", "黄河鲤鱼", "油泼面配凉菜"]
+      },
+      {
+        id: "s8",
+        name: "顺溜削面",
+        district: "太原多门店",
+        lat: 37.8486,
+        lng: 112.5504,
+        meals: ["breakfast", "lunch", "dinner"],
+        tags: ["local", "quick", "warm"],
+        note: "刀削面连锁，吃面效率高，适合一个人快速解决。",
+        dishes: ["牛肉刀削面加卤蛋", "番茄鸡蛋面", "小碗刀削面+凉菜"]
+      },
+      {
+        id: "s9",
+        name: "郝刚刚羊杂割",
+        district: "太原多门店",
+        lat: 37.8742,
+        lng: 112.5625,
+        meals: ["breakfast", "lunch", "dinner"],
+        tags: ["local", "warm"],
+        note: "羊杂割是太原常见热乎选择，适合冷天或想喝汤。",
+        dishes: ["羊杂割加粉条", "羊汤+饼", "羊杂汤少辣加香菜"]
+      },
+      {
+        id: "s10",
+        name: "义井沾串",
+        district: "义井/多门店可搜",
+        lat: 37.8077,
+        lng: 112.5201,
+        meals: ["dinner"],
+        tags: ["spicy", "local"],
+        note: "太原街头感很强的小吃方向，适合晚饭后或夜宵。",
+        dishes: ["沾串多点豆皮和丸子", "麻辣沾串+酸梅汤", "素串拼盘+烤饼"]
+      },
+      {
+        id: "s11",
+        name: "上帝炸鸡",
+        district: "太原多门店",
+        lat: 37.8686,
+        lng: 112.5507,
+        meals: ["lunch", "dinner"],
+        tags: ["quick"],
+        note: "本地年轻人常提到的炸鸡选择，适合想轻松吃点香的。",
+        dishes: ["炸鸡腿+薯条", "鸡翅拼盘", "炸鸡饭配饮料"]
+      },
+      {
+        id: "s12",
+        name: "唐久便利",
+        district: "太原高密度门店",
+        lat: 37.8706,
+        lng: 112.5489,
+        meals: ["breakfast", "lunch", "dinner"],
+        tags: ["quick"],
+        note: "太原本土便利店品牌，赶时间时可选鲜食、饭团、关东煮。",
+        dishes: ["饭团+关东煮", "便当+茶叶蛋", "三明治+咖啡"]
+      },
+      { id: "s13", name: "金虎便利", district: "太原高密度门店", lat: 37.8706, lng: 112.5489, meals: ["breakfast", "lunch", "dinner"], tags: ["quick"], note: "和唐久一样适合赶时间，附近有店就能救急。", dishes: ["包子+豆浆", "便当+烤肠", "饭团+热饮"] },
+      { id: "s14", name: "山西会馆", district: "长风/亲贤商圈可搜", lat: 37.8196, lng: 112.5546, meals: ["lunch", "dinner"], tags: ["local"], note: "适合想认真吃一顿山西菜，聚餐属性更强。", dishes: ["莜面栲栳栳", "过油肉", "老陈醋焖鱼"] },
+      { id: "s15", name: "老太原打卤面", district: "太原多门店可搜", lat: 37.8586, lng: 112.5579, meals: ["breakfast", "lunch", "dinner"], tags: ["local", "quick", "warm"], note: "更具体的吃面选择，适合想要热乎卤子。", dishes: ["打卤面加卤蛋", "肉沫茄子面", "素卤面配小菜"] },
+      { id: "s16", name: "晋韵楼", district: "太原山西菜方向可搜", lat: 37.8439, lng: 112.5605, meals: ["lunch", "dinner"], tags: ["local"], note: "偏传统晋菜，适合点几个共享菜。", dishes: ["过油肉", "黄米凉糕", "山西什锦火锅"] },
+      { id: "s17", name: "大同刀削面馆", district: "太原多门店/街边店", lat: 37.8657, lng: 112.5521, meals: ["breakfast", "lunch", "dinner"], tags: ["local", "quick", "warm"], note: "不追求店名，搜附近的大同刀削面也很稳。", dishes: ["猪肉臊子刀削面", "牛肉刀削面", "炸酱刀削面加豆腐干"] },
+      { id: "s18", name: "河捞面馆", district: "太原街边面馆可搜", lat: 37.8532, lng: 112.5418, meals: ["breakfast", "lunch"], tags: ["local", "quick", "warm"], note: "本地面食细分项，适合换一种面条口感。", dishes: ["羊肉河捞", "西红柿鸡蛋河捞", "肉臊子河捞"] },
+      { id: "s19", name: "晋南饭铺", district: "亲贤/长风/小店区可搜", lat: 37.8035, lng: 112.5571, meals: ["lunch", "dinner"], tags: ["local"], note: "偏晋南口味，面和炒菜都能点。", dishes: ["油泼面", "晋南小炒", "葱花烙饼配羊汤"] },
+      { id: "s20", name: "小店区沾串小馆", district: "小店区夜宵方向", lat: 37.7907, lng: 112.5639, meals: ["dinner"], tags: ["spicy", "local"], note: "适合夜宵，想吃小吃就往这类店搜。", dishes: ["沾串+烤饼", "麻辣串串+冰粉", "豆皮宽粉丸子组合"] },
+      { id: "s21", name: "亲贤街简餐", district: "亲贤街/茂业天地周边", lat: 37.8198, lng: 112.5535, meals: ["lunch", "dinner"], tags: ["quick"], note: "商圈里适合快速解决，选择多不太容易踩空。", dishes: ["烤肉拌饭", "咖喱猪排饭", "麻辣香锅单人餐"] },
+      { id: "s22", name: "柳巷小吃", district: "柳巷商圈", lat: 37.8695, lng: 112.5689, meals: ["lunch", "dinner"], tags: ["quick", "local"], note: "逛街时就近吃，适合小吃拼一顿。", dishes: ["烤冷面+奶茶", "炸串+酸辣粉", "刀削面+凉皮"] },
+      { id: "s23", name: "长风街酸菜鱼", district: "长风街商圈", lat: 37.8176, lng: 112.5495, meals: ["lunch", "dinner"], tags: ["spicy", "warm"], note: "两个人以上时很合适，酸辣下饭。", dishes: ["酸菜鱼双人餐", "金汤鱼片+米饭", "鱼片锅加宽粉"] },
+      { id: "s24", name: "万象城快餐", district: "万象城/长风商务区", lat: 37.8126, lng: 112.5417, meals: ["lunch", "dinner"], tags: ["quick"], note: "想要干净省事、选择丰富，可以按商场餐饮搜。", dishes: ["照烧鸡腿饭", "牛肉饭", "轻食卷+咖啡"] },
+      { id: "s25", name: "学府街面馆", district: "学府街/高校周边", lat: 37.8074, lng: 112.5798, meals: ["breakfast", "lunch", "dinner"], tags: ["quick", "warm"], note: "学生区附近面馆密度高，适合快速热乎一顿。", dishes: ["兰州牛肉面", "重庆小面", "炸酱面加煎蛋"] },
+      { id: "s26", name: "南内环家常菜", district: "南内环街沿线", lat: 37.8437, lng: 112.5561, meals: ["lunch", "dinner"], tags: ["local"], note: "附近办公时的稳妥午晚餐方向。", dishes: ["过油肉盖饭", "鱼香肉丝+米饭", "西红柿鸡蛋面"] },
+      { id: "s27", name: "迎泽大街早餐", district: "迎泽大街沿线", lat: 37.8621, lng: 112.5662, meals: ["breakfast"], tags: ["local", "quick", "warm"], note: "早上优先找热汤、包子、面食。", dishes: ["丸子汤+饼", "豆腐脑+油条", "羊汤+烧饼"] },
+      { id: "s28", name: "府西街羊汤", district: "府西街/府东街周边", lat: 37.8761, lng: 112.5614, meals: ["breakfast", "lunch"], tags: ["local", "warm"], note: "适合想喝热汤、吃得扎实一点。", dishes: ["羊汤+饼", "羊杂割", "羊肉泡馍式热汤饭"] },
+      { id: "s29", name: "钟楼街甜品咖啡", district: "钟楼街/柳巷周边", lat: 37.8715, lng: 112.5675, meals: ["any"], tags: ["sweet", "pretty"], note: "适合甜甜逛街时歇一下，甜品和饮品优先。", dishes: ["巴斯克蛋糕+拿铁", "草莓蛋糕+水果茶", "可颂+冰美式"] },
+      { id: "s30", name: "万象城日料", district: "万象城/长风商务区", lat: 37.8126, lng: 112.5417, meals: ["lunch", "dinner"], tags: ["pretty", "light"], note: "环境更舒服，适合想吃清爽又精致一点。", dishes: ["寿司拼盘+味增汤", "鳗鱼饭", "三文鱼手卷+海草沙拉"] },
+      { id: "s31", name: "茂业天地韩餐", district: "亲贤街/茂业天地", lat: 37.8198, lng: 112.5535, meals: ["lunch", "dinner"], tags: ["pretty", "comfort"], note: "适合芝士、泡菜、甜辣口那一挂。", dishes: ["石锅拌饭", "芝士年糕拉面", "部队锅双人餐"] },
+      { id: "s32", name: "北美N1轻食咖啡", district: "北美N1/长风街", lat: 37.8174, lng: 112.5528, meals: ["breakfast", "lunch", "any"], tags: ["light", "pretty", "sweet"], note: "适合不想吃太重，顺便喝点咖啡。", dishes: ["鸡胸肉沙拉+拿铁", "可颂三明治", "酸奶碗+美式"] },
+      { id: "s33", name: "王府井百货下午茶", district: "亲贤北街/王府井", lat: 37.8252, lng: 112.5565, meals: ["any"], tags: ["sweet", "pretty"], note: "想要甜点、奶茶、蛋糕类时，就近搜很方便。", dishes: ["千层蛋糕+奶茶", "芋泥甜品", "水果茶+小蛋糕"] },
+      { id: "s34", name: "长风街小火锅", district: "长风街商圈", lat: 37.8176, lng: 112.5495, meals: ["lunch", "dinner"], tags: ["warm", "comfort", "pretty"], note: "一个人或两个人都好吃，热乎但不必太隆重。", dishes: ["番茄肥牛小锅", "菌汤虾滑锅", "麻辣小锅少辣"] },
+      { id: "s35", name: "柳巷奶茶甜点", district: "柳巷商圈", lat: 37.8695, lng: 112.5689, meals: ["any"], tags: ["sweet", "quick", "pretty"], note: "逛街顺手的快乐，适合补一点甜。", dishes: ["半糖奶茶+蛋挞", "水果茶+烤冷面", "芋泥奶茶+小贝"] },
+      { id: "s36", name: "晋阳街Brunch", district: "晋阳街/南中环周边", lat: 37.7908, lng: 112.5476, meals: ["breakfast", "lunch"], tags: ["pretty", "light"], note: "适合周末慢一点吃，拍照和饱腹都照顾。", dishes: ["牛油果吐司+咖啡", "班尼迪克蛋", "酸奶碗+可颂"] },
+      { id: "s37", name: "学府街甜辣小吃", district: "学府街/高校周边", lat: 37.8074, lng: 112.5798, meals: ["lunch", "dinner"], tags: ["sweet", "spicy", "quick"], note: "学生区选择多，适合炸鸡、年糕、米线这类快乐食物。", dishes: ["韩式炸鸡", "芝士年糕", "麻辣米线+奶茶"] },
+      { id: "s38", name: "长风商务区泰式", district: "长风商务区", lat: 37.8121, lng: 112.5469, meals: ["lunch", "dinner"], tags: ["pretty", "light"], note: "想吃酸甜清爽、香料感一点时可以搜这个方向。", dishes: ["冬阴功汤粉", "青柠鸡饭", "泰式海鲜沙拉"] },
+      { id: "s39", name: "亲贤街烘焙", district: "亲贤街商圈", lat: 37.8211, lng: 112.5532, meals: ["breakfast", "any"], tags: ["sweet", "quick", "pretty"], note: "早上或下午的小确幸，适合甜甜的轻补给。", dishes: ["可颂+拿铁", "碱水面包+酸奶", "肉松小贝+美式"] },
+      { id: "s40", name: "万达广场简餐甜品", district: "龙湖万达/杏花岭方向", lat: 37.8904, lng: 112.5602, meals: ["lunch", "dinner", "any"], tags: ["pretty", "sweet", "quick"], note: "商场里选择安全，正餐和甜品可以一起解决。", dishes: ["牛肉饭+水果茶", "寿司手卷", "蛋糕+咖啡"] },
+      { id: "s41", name: "南中环轻食", district: "南中环/高新区", lat: 37.7892, lng: 112.5696, meals: ["lunch", "dinner"], tags: ["light", "pretty"], note: "想清爽、少负担时适合搜附近轻食。", dishes: ["鸡胸肉藜麦饭", "金枪鱼沙拉", "牛肉卷+无糖茶"] },
+      { id: "s42", name: "甜甜的夜宵小摊", district: "就近夜宵街/商圈", lat: 37.8706, lng: 112.5489, meals: ["dinner"], tags: ["comfort", "sweet", "spicy"], note: "晚一点不想正经吃饭，就让夜宵负责开心。", dishes: ["烤冷面+奶茶", "炸串+酸梅汤", "韩式炸鸡+年糕"] }
+      ];
+
+    const state = {
+      mode: "broad",
+      editingId: null,
+      history: [],
+      dishHistory: [],
+      broad: load("eatPickerBroad", seedBroad),
+      stores: load("eatPickerStores", seedStores)
+    };
+
+    const $ = (id) => document.getElementById(id);
+
+    const elements = {
+      broadMode: $("broadMode"),
+      nearMode: $("nearMode"),
+      nearFields: $("nearFields"),
+      mealSelect: $("mealSelect"),
+      moodSelect: $("moodSelect"),
+      pickBtn: $("pickBtn"),
+      againBtn: $("againBtn"),
+      locateBtn: $("locateBtn"),
+      latInput: $("latInput"),
+      lngInput: $("lngInput"),
+      mealTag: $("mealTag"),
+      answerTitle: $("answerTitle"),
+      answerDesc: $("answerDesc"),
+      shakeHint: $("shakeHint"),
+      dishChoice: $("dishChoice"),
+      metaTags: $("metaTags"),
+      mapLink: $("mapLink"),
+      historyList: $("historyList"),
+      clockText: $("clockText"),
+      typeInput: $("typeInput"),
+      nameInput: $("nameInput"),
+      districtInput: $("districtInput"),
+      coordInput: $("coordInput"),
+      mealsInput: $("mealsInput"),
+      tagsInput: $("tagsInput"),
+      noteInput: $("noteInput"),
+      dishesInput: $("dishesInput"),
+      storeOnlyFields: $("storeOnlyFields"),
+      saveBtn: $("saveBtn"),
+      exportBtn: $("exportBtn"),
+      importBtn: $("importBtn"),
+      resetBtn: $("resetBtn"),
+      fileInput: $("fileInput"),
+      storeList: $("storeList")
+    };
+
+    let shakeEnabled = false;
+    let lastShakeAt = 0;
+
+    function load(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return structuredClone(fallback);
+        return mergeSeed(JSON.parse(raw), fallback);
+      } catch (error) {
+        return structuredClone(fallback);
+      }
+    }
+
+    function mergeSeed(saved, fallback) {
+      if (!Array.isArray(saved)) return structuredClone(fallback);
+      const byId = new Map(saved.map((item) => [item.id, item]));
+      const merged = saved.map((item) => {
+        const seed = fallback.find((entry) => entry.id === item.id);
+        return seed ? { ...seed, ...item, dishes: item.dishes || seed.dishes || [] } : item;
+      });
+      fallback.forEach((item) => {
+        if (!byId.has(item.id)) merged.push(structuredClone(item));
+      });
+      return merged;
+    }
+
+    function persist() {
+      localStorage.setItem("eatPickerBroad", JSON.stringify(state.broad));
+      localStorage.setItem("eatPickerStores", JSON.stringify(state.stores));
+    }
+
+    function currentMeal() {
+      const selected = elements.mealSelect.value;
+      if (selected !== "auto") return selected;
+      const hour = new Date().getHours();
+      if (hour < 10) return "breakfast";
+      if (hour < 15) return "lunch";
+      if (hour < 22) return "dinner";
+      return "any";
+    }
+
+    function mealName(meal) {
+      return ({ breakfast: "早餐", lunch: "午餐", dinner: "晚餐", any: "随时" })[meal] || "这顿";
+    }
+
+    function setMode(mode) {
+      state.mode = mode;
+      elements.broadMode.classList.toggle("active", mode === "broad");
+      elements.nearMode.classList.toggle("active", mode === "near");
+      elements.nearFields.classList.toggle("hidden", mode !== "near");
+    }
+
+    function setupChoiceGroups() {
+      document.querySelectorAll("[data-choice-for]").forEach((group) => {
+        const select = document.getElementById(group.dataset.choiceFor);
+        if (!select) return;
+        group.addEventListener("click", (event) => {
+          const button = event.target.closest(".choice-btn");
+          if (!button) return;
+          select.value = button.dataset.value;
+          group.querySelectorAll(".choice-btn").forEach((item) => {
+            item.classList.toggle("active", item === button);
+          });
+          select.dispatchEvent(new Event("change"));
+        });
+      });
+    }
+
+    function distanceKm(a, b) {
+      const rad = Math.PI / 180;
+      const dLat = (b.lat - a.lat) * rad;
+      const dLng = (b.lng - a.lng) * rad;
+      const lat1 = a.lat * rad;
+      const lat2 = b.lat * rad;
+      const h = Math.sin(dLat / 2) ** 2 +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) ** 2;
+      return 6371 * 2 * Math.atan2(Math.sqrt(h), Math.sqrt(1 - h));
+    }
+
+    function matches(item, meal, mood) {
+      const mealOk = meal === "any" || item.meals.includes("any") || item.meals.includes(meal);
+      const moodOk = mood === "any" || item.tags.includes(mood);
+      return mealOk && moodOk;
+    }
+
+    function weightedRandom(items, origin) {
+      if (!origin) return items[Math.floor(Math.random() * items.length)];
+      const weighted = items.map((item) => {
+        const dist = item.lat && item.lng ? distanceKm(origin, item) : 8;
+        return { item, dist, weight: Math.max(.18, 1 / (0.8 + dist)) };
+      });
+      const total = weighted.reduce((sum, x) => sum + x.weight, 0);
+      let cursor = Math.random() * total;
+      for (const entry of weighted) {
+        cursor -= entry.weight;
+        if (cursor <= 0) return { ...entry.item, distance: entry.dist };
+      }
+      return { ...weighted[0].item, distance: weighted[0].dist };
+    }
+
+    function isSpecificMeal(item) {
+      return /饭|米线|米粉|面|粉|馍|包|云吞|馄饨|凉皮|香锅|冒菜/.test(item.name);
+    }
+
+    function broadRandom(items) {
+      const weighted = items.map((item) => ({
+        item,
+        weight: isSpecificMeal(item) ? 1.35 : 1
+      }));
+      const total = weighted.reduce((sum, entry) => sum + entry.weight, 0);
+      let cursor = Math.random() * total;
+      for (const entry of weighted) {
+        cursor -= entry.weight;
+        if (cursor <= 0) return entry.item;
+      }
+      return weighted[0].item;
+    }
+
+    function avoidRecent(items) {
+      if (items.length <= 1) return items;
+      const recent = new Set(state.history.slice(0, Math.min(8, Math.max(2, Math.floor(items.length * 0.45)))));
+      const fresh = items.filter((item) => !recent.has(item.name));
+      return fresh.length ? fresh : items;
+    }
+
+    function chooseDish(dishes) {
+      const clean = dishes.filter(Boolean);
+      if (!clean.length) return "";
+      const recent = new Set(state.dishHistory.slice(0, 10));
+      const fresh = clean.filter((dish) => !recent.has(dish));
+      const pool = fresh.length ? fresh : clean;
+      const dish = pool[Math.floor(Math.random() * pool.length)];
+      state.dishHistory.unshift(dish);
+      state.dishHistory = [...new Set(state.dishHistory)].slice(0, 16);
+      return dish;
+    }
+
+    function playShakeFeedback() {
+      const resultCard = document.querySelector(".result");
+      if (!resultCard) return;
+      resultCard.classList.remove("shaking");
+      void resultCard.offsetWidth;
+      resultCard.classList.add("shaking");
+    }
+
+    function pick() {
+      const meal = currentMeal();
+      const mood = elements.moodSelect.value;
+      const source = state.mode === "broad" ? state.broad : state.stores;
+      let pool = source.filter((item) => matches(item, meal, mood));
+      if (!pool.length) pool = source.filter((item) => meal === "any" || item.meals.includes(meal));
+      if (!pool.length) pool = source;
+      pool = avoidRecent(pool);
+
+      const origin = state.mode === "near"
+        ? { lat: Number(elements.latInput.value) || TAIYUAN_CENTER.lat, lng: Number(elements.lngInput.value) || TAIYUAN_CENTER.lng }
+        : null;
+      const item = state.mode === "near" ? weightedRandom(pool, origin) : broadRandom(pool);
+      playShakeFeedback();
+      renderResult(item, meal);
+    }
+
+    function onDeviceMotion(event) {
+      if (!shakeEnabled) return;
+      const acc = event.accelerationIncludingGravity || event.acceleration;
+      if (!acc) return;
+      const strength = Math.abs(acc.x || 0) + Math.abs(acc.y || 0) + Math.abs(acc.z || 0);
+      const now = Date.now();
+      if (strength > 28 && now - lastShakeAt > 950) {
+        lastShakeAt = now;
+        pick();
+      }
+    }
+
+    async function enableShake() {
+      if (shakeEnabled) return;
+      if (!("DeviceMotionEvent" in window)) {
+        elements.shakeHint.textContent = "这个浏览器不支持摇一摇，点按钮也可以随机。";
+        return;
+      }
+      try {
+        if (typeof DeviceMotionEvent.requestPermission === "function") {
+          const permission = await DeviceMotionEvent.requestPermission();
+          if (permission !== "granted") {
+            elements.shakeHint.textContent = "没有开启体感权限，点按钮也可以随机。";
+            return;
+          }
+        }
+        window.addEventListener("devicemotion", onDeviceMotion, { passive: true });
+        shakeEnabled = true;
+        elements.shakeHint.textContent = "摇一摇已开启，晃晃手机就能替甜甜决定。";
+      } catch (error) {
+        elements.shakeHint.textContent = "摇一摇暂时不可用，点按钮也可以随机。";
+      }
+    }
+
+    function renderResult(item, meal) {
+      elements.mealTag.textContent = `${mealName(meal)}建议`;
+      elements.answerTitle.textContent = item.name;
+      elements.answerDesc.textContent = item.note || "这个答案看起来很稳。";
+      const dishes = Array.isArray(item.dishes) ? item.dishes.filter(Boolean) : [];
+      if (dishes.length) {
+        elements.dishChoice.textContent = `具体吃：${chooseDish(dishes)}`;
+        elements.dishChoice.classList.remove("hidden");
+      } else {
+        elements.dishChoice.classList.add("hidden");
+      }
+      elements.metaTags.innerHTML = "";
+
+      const tags = [];
+      if (item.district) tags.push(item.district);
+      if (typeof item.distance === "number") tags.push(`约 ${item.distance.toFixed(1)} km`);
+      tags.push(...item.tags.map(tagText));
+      tags.forEach((tag) => {
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = tag;
+        elements.metaTags.appendChild(span);
+      });
+
+      if (state.mode === "near") {
+        const query = encodeURIComponent(`太原 ${item.name}`);
+        elements.mapLink.href = `https://ditu.amap.com/search?query=${query}`;
+        elements.mapLink.classList.remove("hidden");
+      } else {
+        elements.mapLink.classList.add("hidden");
+      }
+
+      state.history.unshift(item.name);
+      state.history = [...new Set(state.history)].slice(0, 8);
+      renderHistory();
+    }
+
+    function tagText(tag) {
+      return ({
+        sweet: "甜甜会爱",
+        pretty: "精致一点",
+        comfort: "治愈舒服",
+        local: "本地味",
+        warm: "热乎",
+        quick: "省时间",
+        light: "清爽",
+        spicy: "重口"
+      })[tag] || tag;
+    }
+
+    function renderHistory() {
+      elements.historyList.innerHTML = "";
+      if (!state.history.length) {
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = "还没有记录";
+        elements.historyList.appendChild(span);
+        return;
+      }
+      state.history.forEach((name) => {
+        const span = document.createElement("span");
+        span.className = "pill";
+        span.textContent = name;
+        elements.historyList.appendChild(span);
+      });
+    }
+
+    function renderList() {
+      const all = [
+        ...state.stores.map((item) => ({ ...item, type: "store" })),
+        ...state.broad.map((item) => ({ ...item, type: "broad" }))
+      ];
+      elements.storeList.innerHTML = "";
+      all.forEach((item) => {
+        const row = document.createElement("div");
+        row.className = "store-item";
+        row.innerHTML = `
+          <div>
+            <strong>${escapeHtml(item.name)}</strong>
+            <span>${item.type === "store" ? escapeHtml(item.district || "太原餐厅") : "泛泛品类"} · ${item.meals.map(mealName).join("、")} · ${item.tags.map(tagText).join("、")}</span>
+            <span>${escapeHtml(item.note || "")}</span>
+            <span>${Array.isArray(item.dishes) && item.dishes.length ? `推荐：${escapeHtml(item.dishes.slice(0, 3).join(" / "))}` : ""}</span>
+          </div>
+          <div class="tiny-actions">
+            <button class="icon-button" type="button" title="编辑" data-action="edit" data-id="${item.id}" data-type="${item.type}">改</button>
+            <button class="icon-button" type="button" title="删除" data-action="delete" data-id="${item.id}" data-type="${item.type}">删</button>
+          </div>
+        `;
+        elements.storeList.appendChild(row);
+      });
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function parseList(value, fallback) {
+      const list = value.split(",").map((x) => x.trim()).filter(Boolean);
+      return list.length ? list : fallback;
+    }
+
+    function saveItem() {
+      const type = elements.typeInput.value;
+      const target = type === "store" ? state.stores : state.broad;
+      const name = elements.nameInput.value.trim();
+      if (!name) {
+        elements.nameInput.focus();
+        return;
+      }
+      const coord = elements.coordInput.value.split(",").map((x) => Number(x.trim()));
+      const item = {
+        id: state.editingId || `${type}-${Date.now()}`,
+        name,
+        meals: parseList(elements.mealsInput.value, ["any"]),
+        tags: parseList(elements.tagsInput.value, ["local"]),
+        note: elements.noteInput.value.trim(),
+        dishes: parseList(elements.dishesInput.value.replaceAll("，", ","), [])
+      };
+      if (type === "store") {
+        item.district = elements.districtInput.value.trim() || "太原";
+        if (Number.isFinite(coord[0]) && Number.isFinite(coord[1])) {
+          item.lat = coord[0];
+          item.lng = coord[1];
+        }
+      }
+      const index = target.findIndex((entry) => entry.id === item.id);
+      if (index >= 0) target[index] = item;
+      else target.unshift(item);
+      state.editingId = null;
+      clearForm();
+      persist();
+      renderList();
+    }
+
+    function clearForm() {
+      elements.nameInput.value = "";
+      elements.districtInput.value = "";
+      elements.coordInput.value = "";
+      elements.mealsInput.value = "";
+      elements.tagsInput.value = "";
+      elements.noteInput.value = "";
+      elements.dishesInput.value = "";
+      elements.saveBtn.textContent = "保存";
+    }
+
+    function editItem(type, id) {
+      const target = type === "store" ? state.stores : state.broad;
+      const item = target.find((entry) => entry.id === id);
+      if (!item) return;
+      state.editingId = id;
+      elements.typeInput.value = type;
+      elements.nameInput.value = item.name;
+      elements.districtInput.value = item.district || "";
+      elements.coordInput.value = item.lat && item.lng ? `${item.lat},${item.lng}` : "";
+      elements.mealsInput.value = item.meals.join(",");
+      elements.tagsInput.value = item.tags.join(",");
+      elements.noteInput.value = item.note || "";
+      elements.dishesInput.value = Array.isArray(item.dishes) ? item.dishes.join("，") : "";
+      elements.saveBtn.textContent = "保存修改";
+      toggleStoreFields();
+      elements.nameInput.focus();
+    }
+
+    function deleteItem(type, id) {
+      const targetName = type === "store" ? "stores" : "broad";
+      state[targetName] = state[targetName].filter((entry) => entry.id !== id);
+      persist();
+      renderList();
+    }
+
+    function toggleStoreFields() {
+      elements.storeOnlyFields.classList.toggle("hidden", elements.typeInput.value !== "store");
+    }
+
+    function exportData() {
+      const data = JSON.stringify({ broad: state.broad, stores: state.stores }, null, 2);
+      const blob = new Blob([data], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "今天吃什么备份.json";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importData(file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (Array.isArray(data.broad)) state.broad = data.broad;
+          if (Array.isArray(data.stores)) state.stores = data.stores;
+          persist();
+          renderList();
+        } catch (error) {
+          alert("导入失败，文件格式看起来不对。");
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function updateClock() {
+      const meal = currentMeal();
+      const now = new Date();
+      elements.clockText.textContent = `${now.getHours().toString().padStart(2, "0")}:${now.getMinutes().toString().padStart(2, "0")} · ${mealName(meal)}`;
+    }
+
+    elements.broadMode.addEventListener("click", () => setMode("broad"));
+    elements.nearMode.addEventListener("click", () => setMode("near"));
+    elements.pickBtn.addEventListener("click", async () => {
+      await enableShake();
+      pick();
+    });
+    elements.againBtn.addEventListener("click", pick);
+    elements.mealSelect.addEventListener("change", updateClock);
+    elements.typeInput.addEventListener("change", toggleStoreFields);
+    elements.saveBtn.addEventListener("click", saveItem);
+    elements.exportBtn.addEventListener("click", exportData);
+    elements.importBtn.addEventListener("click", () => elements.fileInput.click());
+    elements.fileInput.addEventListener("change", (event) => {
+      const file = event.target.files[0];
+      if (file) importData(file);
+      event.target.value = "";
+    });
+    elements.resetBtn.addEventListener("click", () => {
+      if (!confirm("确定恢复内置数据吗？当前手动维护的内容会被覆盖。")) return;
+      state.broad = structuredClone(seedBroad);
+      state.stores = structuredClone(seedStores);
+      persist();
+      renderList();
+    });
+    elements.locateBtn.addEventListener("click", () => {
+      if (!navigator.geolocation) {
+        alert("当前浏览器不支持定位，先用太原市中心坐标。");
+        return;
+      }
+      navigator.geolocation.getCurrentPosition((pos) => {
+        elements.latInput.value = pos.coords.latitude.toFixed(6);
+        elements.lngInput.value = pos.coords.longitude.toFixed(6);
+        pick();
+      }, () => {
+        alert("没有拿到定位，先用太原市中心坐标。");
+      }, { enableHighAccuracy: true, timeout: 8000 });
+    });
+    elements.storeList.addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+      const { action, id, type } = button.dataset;
+      if (action === "edit") editItem(type, id);
+      if (action === "delete") deleteItem(type, id);
+    });
+
+    updateClock();
+    setupChoiceGroups();
+    setInterval(updateClock, 30000);
+    renderHistory();
+    renderList();
+  </script>
+</body>
+</html>
